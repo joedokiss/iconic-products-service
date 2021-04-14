@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Products\Interfaces\IProductService;
+use App\Utils\Outputer;
+use http\Exception;
 use Illuminate\Console\Command;
 
 class iconic extends Command
@@ -33,10 +36,26 @@ class iconic extends Command
     /**
      * Execute the console command.
      *
+     * @param IProductService $iconicProductService
      * @return int
      */
-    public function handle()
+    public function handle(IProductService $iconicProductService)
     {
-        return 0;
+        try
+        {
+            $products = $iconicProductService->fetchProducts();
+
+            $decoratedProducts = $iconicProductService->decorateProducts($products);
+
+            Outputer::toJsonFile($decoratedProducts);
+        }
+        catch (Exception $e)
+        {
+            // Log the error $e->getMessages();
+            echo 'Something wrong!';
+            return false;
+        }
+
+        return true;
     }
 }
