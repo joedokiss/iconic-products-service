@@ -64,4 +64,34 @@ class IconicTest extends TestCase
 
         $productServiceMock->decorateProducts($product);
     }
+
+    public function test_decorate_products_without_videos()
+    {
+        $product = [
+            0 => [
+                'video_count' => 0,
+                'sku' => 'PE745AA11LMQ',
+                'name' => 'Steady Run Leggings',
+            ]
+        ];
+
+        $productVideo = [
+            0 => [],
+        ];
+
+        $productWithVideo = [
+            0 => [
+                'video_count' => 0,
+                'sku' => 'PE745AA11LMQ',
+                'name' => 'Steady Run Leggings',
+            ]
+        ];
+
+        $productServiceMock = $this->createPartialMock(IconicProductService::class, ['getPreviewVideos']);
+
+        $productServiceMock->method('getPreviewVideos')
+            ->willReturn($productVideo);
+
+        $this->assertEquals($productWithVideo, $productServiceMock->decorateProducts($product));
+    }
 }
