@@ -40,7 +40,11 @@ class IconicProductService implements IProductService
      */
     public function getPreviewVideos(string $productSku): array
     {
-        return [];
+        $videos = $this->httpClient->getData('GET', "catalog/products/{$productSku}/videos");
+
+        return isset($videos['_embedded']['videos_url'])
+            ? $videos['_embedded']['videos_url']
+            : [];
     }
 
     /**
