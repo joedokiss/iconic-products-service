@@ -54,15 +54,15 @@ class IconicProductService implements IProductService
      */
     public function decorateProducts(array $products): array
     {
-        $productsCollection = [];
+        $productsWithVideos = [];
+        $productsWithoutVideos = [];
 
         foreach ($products as $product)
         {
             // No videos
             if ((int)$product['video_count'] === 0)
             {
-                // Add products without videos on bottom
-                array_push($productsCollection, $product);
+                array_push($productsWithoutVideos, $product);
                 continue;
             }
 
@@ -72,11 +72,10 @@ class IconicProductService implements IProductService
             {
                 $decoratedProduct = array_merge($product, ['videos_previews' => $videos]);
 
-                // Add products having videos on the top
-                array_unshift($productsCollection, $decoratedProduct);
+                array_push($productsWithVideos, $decoratedProduct);
             }
         }
 
-        return $productsCollection;
+        return array_merge($productsWithVideos, $productsWithoutVideos);
     }
 }
